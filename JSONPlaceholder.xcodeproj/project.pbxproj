@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		872FFBEF244E4B7A00662009 /* JSONPlaceholderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 872FFBEE244E4B7A00662009 /* JSONPlaceholderService.swift */; };
+		872FFBF1244E4BB300662009 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 872FFBF0244E4BB300662009 /* User.swift */; };
+		872FFBF3244E4C5900662009 /* Todo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 872FFBF2244E4C5900662009 /* Todo.swift */; };
+		872FFBF5244E4E1B00662009 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 872FFBF4244E4E1B00662009 /* Post.swift */; };
+		872FFBF7244E4E8C00662009 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 872FFBF6244E4E8C00662009 /* Comment.swift */; };
+		872FFBF9244E4F1C00662009 /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = 872FFBF8244E4F1C00662009 /* Album.swift */; };
+		872FFBFB244E4F2A00662009 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 872FFBFA244E4F2A00662009 /* Photo.swift */; };
+		872FFBFD244E526E00662009 /* MockURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 872FFBFC244E526E00662009 /* MockURLProtocol.swift */; };
 		87D25841244DEBB900EE0712 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87D25840244DEBB900EE0712 /* AppDelegate.swift */; };
 		87D25843244DEBB900EE0712 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87D25842244DEBB900EE0712 /* SceneDelegate.swift */; };
 		87D25846244DEBB900EE0712 /* JSONPlaceholder.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 87D25844244DEBB900EE0712 /* JSONPlaceholder.xcdatamodeld */; };
@@ -35,7 +43,28 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		87D25892244DEDCC00EE0712 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		872FFBEE244E4B7A00662009 /* JSONPlaceholderService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONPlaceholderService.swift; sourceTree = "<group>"; };
+		872FFBF0244E4BB300662009 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		872FFBF2244E4C5900662009 /* Todo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Todo.swift; sourceTree = "<group>"; };
+		872FFBF4244E4E1B00662009 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
+		872FFBF6244E4E8C00662009 /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
+		872FFBF8244E4F1C00662009 /* Album.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
+		872FFBFA244E4F2A00662009 /* Photo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
+		872FFBFC244E526E00662009 /* MockURLProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURLProtocol.swift; sourceTree = "<group>"; };
 		87D2583D244DEBB900EE0712 /* JSONPlaceholder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JSONPlaceholder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		87D25840244DEBB900EE0712 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		87D25842244DEBB900EE0712 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -78,9 +107,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		872FFBFE244E52A200662009 /* Data Models */ = {
+			isa = PBXGroup;
+			children = (
+				872FFBF4244E4E1B00662009 /* Post.swift */,
+				872FFBF6244E4E8C00662009 /* Comment.swift */,
+				872FFBF8244E4F1C00662009 /* Album.swift */,
+				872FFBFA244E4F2A00662009 /* Photo.swift */,
+				872FFBF2244E4C5900662009 /* Todo.swift */,
+				872FFBF0244E4BB300662009 /* User.swift */,
+			);
+			path = "Data Models";
+			sourceTree = "<group>";
+		};
 		87D25834244DEBB900EE0712 = {
 			isa = PBXGroup;
 			children = (
+				87D25896244DEDDA00EE0712 /* Services */,
 				87D2583F244DEBB900EE0712 /* JSONPlaceholder */,
 				87D25859244DEBBA00EE0712 /* JSONPlaceholderTests */,
 				87D25864244DEBBA00EE0712 /* JSONPlaceholderUITests */,
@@ -139,6 +182,16 @@
 			path = JSONPlaceholderUITests;
 			sourceTree = "<group>";
 		};
+		87D25896244DEDDA00EE0712 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				872FFBEE244E4B7A00662009 /* JSONPlaceholderService.swift */,
+				872FFBFC244E526E00662009 /* MockURLProtocol.swift */,
+				872FFBFE244E52A200662009 /* Data Models */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -149,6 +202,7 @@
 				87D25839244DEBB900EE0712 /* Sources */,
 				87D2583A244DEBB900EE0712 /* Frameworks */,
 				87D2583B244DEBB900EE0712 /* Resources */,
+				87D25892244DEDCC00EE0712 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -270,10 +324,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				872FFBF3244E4C5900662009 /* Todo.swift in Sources */,
 				87D25846244DEBB900EE0712 /* JSONPlaceholder.xcdatamodeld in Sources */,
+				872FFBEF244E4B7A00662009 /* JSONPlaceholderService.swift in Sources */,
+				872FFBFD244E526E00662009 /* MockURLProtocol.swift in Sources */,
+				872FFBF5244E4E1B00662009 /* Post.swift in Sources */,
+				872FFBF1244E4BB300662009 /* User.swift in Sources */,
 				87D25841244DEBB900EE0712 /* AppDelegate.swift in Sources */,
 				87D25848244DEBB900EE0712 /* ContentView.swift in Sources */,
+				872FFBFB244E4F2A00662009 /* Photo.swift in Sources */,
+				872FFBF7244E4E8C00662009 /* Comment.swift in Sources */,
 				87D25843244DEBB900EE0712 /* SceneDelegate.swift in Sources */,
+				872FFBF9244E4F1C00662009 /* Album.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
