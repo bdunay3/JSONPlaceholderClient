@@ -8,41 +8,41 @@
 
 import Foundation
 
-struct Company: Codable, Hashable, CustomStringConvertible {
-    let name: String
-    let catchPhrase: String
-    let bs: String
+public struct Company: Codable, Hashable, CustomStringConvertible {
+    public let name: String
+    public let catchPhrase: String
+    public let bs: String
     
-    var description: String {
+    public var description: String {
         return "\(name)"
     }
 }
 
-struct GeoLocation: Codable, Hashable, CustomStringConvertible {
-    let lat: String
-    let lng: String
+public struct GeoLocation: Codable, Hashable, CustomStringConvertible {
+    public let lat: String
+    public let lng: String
     
-    var description: String {
+    public var description: String {
         return "\(lat), \(lng)"
     }
     
 }
 
-struct Address: Codable, Hashable, CustomStringConvertible {
-    let street: String
-    let suite: String
-    let city: String
-    let zipcode: String
-    let geo: GeoLocation
+public struct Address: Codable, Hashable, CustomStringConvertible {
+    public let street: String
+    public let suite: String
+    public let city: String
+    public let zipcode: String
+    public let geo: GeoLocation
     
-    var description: String {
+    public var description: String {
         return "\(street), \(city)"
     }
 }
 
-struct User: Codable, Hashable {
-    enum CodingKeys: String, CodingKey {
-        case indentifier = "id"
+public struct User: Codable, Hashable, FileLoadable {
+    public enum CodingKeys: String, CodingKey {
+        case identifier = "id"
         case name = "name"
         case username = "username"
         case email = "email"
@@ -52,12 +52,12 @@ struct User: Codable, Hashable {
         case company = "company"
     }
     
-    let indentifier: UInt
-    let name: String
-    let username: String
-    let email: String
-    let address: Address
-    let phone: String
-    let website: String
-    let company: Company
+    public let identifier: UInt
+    public let name: String
+    public let username: String
+    public let email: String
+    public let address: Address
+    public let phone: String
+    public let website: String
+    public let company: Company
 }

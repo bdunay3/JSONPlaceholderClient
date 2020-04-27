@@ -7,15 +7,27 @@
 //
 
 import SwiftUI
+import JSONPlaceholderAPI
 
-struct ContentView: View {
+struct UserList: View {
+    let userList: [User]
+    
     var body: some View {
-        Text("Hello, World!")
+        NavigationView {
+            List(userList, id: \.self) { user in
+                Text(user.name)
+            }
+        }
+        .navigationBarTitle("Users")
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        guard let users: [User] = loadList(from: "User_Multiple") else {
+            fatalError("Failed to get mock users from local bundle!")
+        }
+        
+        return UserList(userList: users)
     }
 }
