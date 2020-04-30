@@ -9,7 +9,7 @@
 import Foundation
 
 struct Photo: Codable, Hashable {
-    enum CodableKeys: String, CodingKey {
+    enum CodingKeys: String, CodingKey {
         case albumId = "albumId"
         case identifier = "id"
         case title = "title"

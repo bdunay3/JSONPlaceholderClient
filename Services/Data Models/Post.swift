@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct Post: Codable, Hashable, FileLoadable {
+public struct Post: Codable, Hashable {
     public enum CodingKeys: String, CodingKey {
         case userId = "userId"
         case identifier = "id"

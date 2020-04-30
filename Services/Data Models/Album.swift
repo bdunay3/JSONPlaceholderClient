@@ -8,14 +8,20 @@
 
 import Foundation
 
-struct Album: Codable, Hashable {
-    enum CodableKeys: String, CodingKey {
+public struct Album: Codable, Hashable {
+    public enum CodingKeys: String, CodingKey {
         case userId = "userId"
         case identifier = "id"
         case title = "title"
     }
     
-    let userId: UInt
-    let identifier: UInt
-    let title: String
+    public let userId: UInt
+    public let identifier: UInt
+    public let title: String
+    
+    public init(userId: UInt, identifier: UInt, title: String) {
+        self.userId = userId
+        self.identifier = identifier
+        self.title = title
+    }
 }

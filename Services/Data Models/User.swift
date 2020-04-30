@@ -40,7 +40,7 @@ public struct Address: Codable, Hashable, CustomStringConvertible {
     }
 }
 
-public struct User: Codable, Hashable, FileLoadable {
+public struct User: Codable, Hashable {
     public enum CodingKeys: String, CodingKey {
         case identifier = "id"
         case name = "name"

@@ -25,10 +25,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         // Create the SwiftUI view and set the context as the value for the managedObjectContext environment keyPath.
         // Add `@Environment(\.managedObjectContext)` in the views that will need the context.
-        guard let users: [User] = loadList(from: "User_Multiple") else {
-            fatalError("Failed to get mock users from local bundle!")
-        }
-        let contentView = UserListView(userList: users).environment(\.managedObjectContext, context)
+        let apiClient = JSONPlaceholderApiClient()
+        let presenter = UserListViewModel(apiClient: apiClient)
+        
+        let contentView = UserListView()
+            .environment(\.managedObjectContext, context)
+            .environmentObject(presenter)
 
         // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {
