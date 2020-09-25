@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct Company: Codable, Hashable, CustomStringConvertible {
+public struct Company: Hashable, CustomStringConvertible {
     public let name: String
     public let catchPhrase: String
     public let bs: String
@@ -18,7 +18,9 @@ public struct Company: Codable, Hashable, CustomStringConvertible {
     }
 }
 
-public struct GeoLocation: Codable, Hashable, CustomStringConvertible {
+extension Company: Codable {}
+
+public struct GeoLocation: Hashable, CustomStringConvertible {
     public let lat: String
     public let lng: String
     
@@ -28,7 +30,9 @@ public struct GeoLocation: Codable, Hashable, CustomStringConvertible {
     
 }
 
-public struct Address: Codable, Hashable, CustomStringConvertible {
+extension GeoLocation: Codable {}
+
+public struct Address: Hashable, CustomStringConvertible {
     public let street: String
     public let suite: String
     public let city: String
@@ -40,8 +44,21 @@ public struct Address: Codable, Hashable, CustomStringConvertible {
     }
 }
 
-public struct User: Codable, Hashable {
-    public enum CodingKeys: String, CodingKey {
+extension Address: Codable {}
+
+public struct User: Hashable {
+    public let identifier: UInt
+    public let name: String
+    public let username: String
+    public let email: String
+    public let address: Address
+    public let phone: String
+    public let website: String
+    public let company: Company
+}
+
+extension User: Codable {
+    enum CodingKeys: String, CodingKey {
         case identifier = "id"
         case name = "name"
         case username = "username"
@@ -51,13 +68,4 @@ public struct User: Codable, Hashable {
         case website = "website"
         case company = "company"
     }
-    
-    public let identifier: UInt
-    public let name: String
-    public let username: String
-    public let email: String
-    public let address: Address
-    public let phone: String
-    public let website: String
-    public let company: Company
 }

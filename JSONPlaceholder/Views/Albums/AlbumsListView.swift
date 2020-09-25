@@ -19,7 +19,7 @@ struct AlbumRowView: View {
 }
 
 struct AlbumsListView: View {
-    @EnvironmentObject var viewModel: AlbumsViewModel
+    @ObservedObject var viewModel: AlbumsViewModel
     
     var body: some View {
         List(viewModel.listOfAlbums, id: \.identifier) { album in
@@ -42,9 +42,11 @@ struct AlbumsListView_Previews: PreviewProvider {
             fatalError("No users found in JSON file")
         }
         
-        let viewModel = AlbumsViewModel(user: user, apiClient: JSONPlaceholderApiClient())
+        let viewModel = AlbumsViewModel(user: user, apiClient: JPAClient())
         viewModel.listOfAlbums = albums
         
-        return AlbumsListView().environmentObject(viewModel)
+        return NavigationView {
+            AlbumsListView(viewModel: viewModel)
+        }
     }
 }

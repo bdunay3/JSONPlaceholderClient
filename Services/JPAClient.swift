@@ -26,28 +26,32 @@ public enum HTTPError: LocalizedError {
     }
 }
 
-public protocol JSONPlachoderApiClientType {
+public protocol JPAClientType {
     func getUsersTask() -> AnyPublisher<Array<User>, Error>
     func getAlbumsTask(for user: User) -> AnyPublisher<[Album], Error>
     func getPostsTask(for user: User) -> AnyPublisher<Array<Post>, Error>
     func getPostsTask(for postId: UInt) -> AnyPublisher<Array<Post>, Error>
+    func getTodosTask(for user: User) -> AnyPublisher<Array<Todo>, Error>
 }
 
-public class JSONPlaceholderApiClient {
-    struct Endpoint {
-        static let users = "users"
-        static let posts = "posts"
-        static let albums = "albums"
+public class JPAClient {
+    enum Endpoint: String, EndPointType {
+        case users = "users"
+        case posts = "posts"
+        case albums = "albums"
+        case todos = "todos"
     }
     
     public let apiClient = URLSession.shared
     // TODO: We want to return a value according to build enviroment var
-    public let environment: Environment = .production
+    public private(set) var environment: Environment
     
-    public init() {}
+    public init(environment: Environment = .production) {
+        self.environment = environment
+    }
 }
 
-extension JSONPlaceholderApiClient: JSONPlachoderApiClientType {
+extension JPAClient: JPAClientType {
     public func getUsersTask() -> AnyPublisher<Array<User>, Error> {
         let requestURL = environment.url(endPoint: Endpoint.users, queryParameters: [])
         let urlRequest = URLRequest(url: requestURL)
@@ -74,7 +78,18 @@ extension JSONPlaceholderApiClient: JSONPlachoderApiClientType {
     }
     
     public func getPostsTask(for postId: UInt) -> AnyPublisher<Array<Post>, Error> {
-        let requestURL = environment.url(endPoint: Endpoint.posts, queryParameters: [URLQueryItem(name: "id", value: "\(postId)")])
+        let requestURL = environment.url(endPoint: Endpoint.posts, queryParameters: [
+            URLQueryItem(name: "id", value: "\(postId)")
+        ])
+        let urlRequest = URLRequest(url: requestURL)
+        
+        return runTask_GetJSON(for: urlRequest)
+    }
+    
+    public func getTodosTask(for user: User) -> AnyPublisher<Array<Todo>, Error> {
+        let requestURL = environment.url(endPoint: Endpoint.todos, queryParameters: [
+            URLQueryItem(name: "userId", value: "\(user.identifier)")
+        ])
         let urlRequest = URLRequest(url: requestURL)
         
         return runTask_GetJSON(for: urlRequest)

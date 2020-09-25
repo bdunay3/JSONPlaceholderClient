@@ -8,16 +8,18 @@
 
 import Foundation
 
-struct Todo: Codable, Hashable {
+public struct Todo: Hashable {
+    public let userId: UInt
+    public let identifier: UInt
+    public let title: String
+    public let isCompleted: Bool
+}
+
+extension Todo: Codable {
     enum CodingKeys: String, CodingKey {
         case userId = "userId"
         case identifier = "id"
         case title = "title"
         case isCompleted = "completed"
     }
-    
-    let userId: UInt
-    let identifier: UInt
-    let title: String
-    let isCompleted: Bool
 }

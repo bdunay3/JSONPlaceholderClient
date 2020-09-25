@@ -12,10 +12,6 @@ import JSONPlaceholderAPI
 struct UserListRow: View {
     let user: User
     
-    @EnvironmentObject var viewModel: UserListViewModel
-    @State var isInfoPresented: Bool = false // Creating a state
-    @State var isPostsPresented: Bool = false
-    
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(user.name)
@@ -23,56 +19,22 @@ struct UserListRow: View {
                 .font(.caption)
         }
         .padding([.vertical], 2)
-        .contextMenu {
-            Button(action: {
-                self.isInfoPresented.toggle()
-            }) {
-                HStack {
-                    Text("Contact Info")
-                    Image(systemName: "info.circle")
-                }
-            }
-            .sheet(isPresented: $isInfoPresented) {
-                NavigationView {
-                    UserDetailView(user: self.user)
-                }
-            }
-            
-            Button(action: {
-                self.isPostsPresented.toggle()
-            }) {
-                HStack {
-                    Text("Posts")
-                    Image(systemName: "message")
-                }
-            }
-            .sheet(isPresented: $isPostsPresented) {
-                return NavigationView {
-                    PostListView().environmentObject(self.viewModel.postsViewModel(for: self.user))
-                }
-            }
-            
-            Button(action: {
-                self.isInfoPresented.toggle()
-            }) {
-                HStack {
-                    Text("Delete")
-                    Image(systemName: "trash")
-                }
-            }
-            .background(Color.red)
-        }
     }
 }
 
 struct UserListView: View {
-    @EnvironmentObject var viewModel: UserListViewModel
+    @ObservedObject var viewModel: UserListViewModel
+    
+    @State var isInfoPresented: Bool = false // Creating a state
+    @State var isPostsPresented: Bool = false
+    
+    @Binding var selectedUser: User?
     
     var body: some View {
         NavigationView {
             List {
                 ForEach(viewModel.listOfUsers, id: \.identifier) { user in
-                    NavigationLink(destination: AlbumsListView().environmentObject(self.viewModel.albumsViewModel(for: user))) {
+                    Button(action: { self.selectedUser = user }) {
                         UserListRow(user: user)
                     }
                 }
@@ -93,14 +55,12 @@ struct UserListView: View {
 }
 
 struct UserListView_Previews: PreviewProvider {
+    static let users: [User] = loadObject(from: "User_Multiple") ?? []
+    
     static var previews: some View {
-        guard let users: [User] = loadObject(from: "User_Multiple") else {
-            fatalError("Failed to get mock users from local bundle!")
-        }
+        let viewModel = UserListViewModel(apiClient: JPAClient())
+        viewModel.listOfUsers = users
         
-        let presenter = UserListViewModel(apiClient: JSONPlaceholderApiClient())
-        presenter.listOfUsers = users
-        
-        return UserListView().environmentObject(presenter)
+        return UserListView(viewModel: viewModel, selectedUser: .constant(nil))
     }
 }

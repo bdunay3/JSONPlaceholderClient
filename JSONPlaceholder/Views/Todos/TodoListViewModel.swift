@@ -1,17 +1,17 @@
 //
-//  AlbumsViewModel.swift
+//  TodoListViewModel.swift
 //  JSONPlaceholder
 //
-//  Created by Bill Dunay on 4/30/20.
+//  Created by William Dunay on 9/25/20.
 //  Copyright © 2020 Bill Dunay. All rights reserved.
 //
 
+import Combine
 import Foundation
 import JSONPlaceholderAPI
-import Combine
 
-class AlbumsViewModel: ObservableObject {
-    @Published var listOfAlbums = [Album]()
+class TodoListViewModel: ObservableObject {
+    @Published var listOfTodos = [Todo]()
     @Published private(set) var error: (isShowing: Bool, message: String?) = (isShowing: false, message: nil)
     
     private let user: User
@@ -19,21 +19,21 @@ class AlbumsViewModel: ObservableObject {
     private var cancellationToken: AnyCancellable?
     
     init(user: User, apiClient: JPAClientType) {
-        self.apiClient = apiClient
         self.user = user
+        self.apiClient = apiClient
     }
     
-    func getAlbums() {
-        cancellationToken = apiClient.getAlbumsTask(for: user)
-            .sink(receiveCompletion: { complete in
+    func getTodos() {
+        cancellationToken = apiClient.getTodosTask(for: user)
+            .sink(receiveCompletion: { (complete) in
                 switch complete {
                 case .failure(let error):
                     print(error.localizedDescription)
                 case .finished:
                     break
                 }
-            }, receiveValue: { (fetchedAlbums) in
-                self.listOfAlbums = fetchedAlbums
+            }, receiveValue: { (fetchedTodods) in
+                self.listOfTodos = fetchedTodods
             })
     }
 }

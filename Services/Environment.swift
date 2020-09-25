@@ -8,6 +8,10 @@
 
 import Foundation
 
+public protocol EndPointType {
+    var rawValue: String { get }
+}
+
 public enum Environment {
     case production
     case qa
@@ -31,9 +35,9 @@ public enum Environment {
         return serverUrl
     }
     
-    func url(endPoint: String, queryParameters: [URLQueryItem]) -> URL {
+    func url(endPoint: EndPointType, queryParameters: [URLQueryItem]) -> URL {
         var urlComponents = URLComponents()
-        urlComponents.path = endPoint
+        urlComponents.path = endPoint.rawValue
         urlComponents.queryItems = queryParameters
         
         guard let finalURL = urlComponents.url(relativeTo: baseUrl) else {

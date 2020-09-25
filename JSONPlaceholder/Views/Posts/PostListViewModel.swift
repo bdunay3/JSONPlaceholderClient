@@ -11,13 +11,13 @@ import JSONPlaceholderAPI
 import Combine
 
 class PostsListViewModel: ObservableObject {
-    let apiClient: JSONPlachoderApiClientType
+    let apiClient: JPAClientType
     let user: User
     
     @Published var posts = [Post]()
     private var cancellationToken: AnyCancellable?
     
-    init(with user: User, apiClient: JSONPlachoderApiClientType) {
+    init(with user: User, apiClient: JPAClientType) {
         self.apiClient = apiClient
         self.user = user
     }

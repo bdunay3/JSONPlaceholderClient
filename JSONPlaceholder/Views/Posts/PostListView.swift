@@ -9,21 +9,30 @@
 import SwiftUI
 import JSONPlaceholderAPI
 
+struct PostItemView: View {
+    let post: Post
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(post.title)
+                .font(.headline)
+                .padding(.bottom, 6)
+            Text(post.body)
+                .multilineTextAlignment(.leading)
+                .font(.body)
+                .lineLimit(nil)
+        }
+        .padding(.bottom, 10)
+    }
+}
+
 struct PostListView: View {
-    @EnvironmentObject var viewModel: PostsListViewModel
+    @ObservedObject var viewModel: PostsListViewModel
     
     var body: some View {
         List {
             ForEach(viewModel.posts, id: \.identifier) { post in
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(post.title)
-                        .bold()
-                    Text(post.body)
-                        .multilineTextAlignment(.leading)
-                        .font(.body)
-                        .lineLimit(nil)
-                }
-                .lineLimit(nil)
+                PostItemView(post: post)
             }
         }
         .navigationBarTitle("Posts")
@@ -43,11 +52,11 @@ struct PostListView_Previews: PreviewProvider {
             fatalError("No posts found in JSON file")
         }
         
-        let viewModel = PostsListViewModel(with: user, apiClient: JSONPlaceholderApiClient())
+        let viewModel = PostsListViewModel(with: user, apiClient: JPAClient())
         viewModel.posts = posts
         
         return NavigationView {
-            PostListView().environmentObject(viewModel)
+            PostListView(viewModel: viewModel)
         }
     }
 }

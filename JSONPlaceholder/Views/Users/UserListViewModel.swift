@@ -13,10 +13,10 @@ import JSONPlaceholderAPI
 class UserListViewModel: ObservableObject {
     @Published var listOfUsers: [User] = []
     
-    let apiClient: JSONPlachoderApiClientType
+    let apiClient: JPAClientType
     var cancellationToken: AnyCancellable?
     
-    init(apiClient: JSONPlachoderApiClientType) {
+    init(apiClient: JPAClientType) {
         self.apiClient = apiClient
     }
     
