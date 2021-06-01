@@ -12,7 +12,7 @@ public protocol EndPointType {
     var rawValue: String { get }
 }
 
-public enum Environment {
+public enum BackendEnvironment {
     case production
     case qa
     case debug

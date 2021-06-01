@@ -27,12 +27,15 @@ struct PostItemView: View {
 }
 
 struct PostListView: View {
-    @ObservedObject var viewModel: PostsListViewModel
+    @StateObject var viewModel: PostsListViewModel
+    @Environment(\.apiClient) var apiClient
     
     var body: some View {
         List {
             ForEach(viewModel.posts, id: \.identifier) { post in
-                PostItemView(post: post)
+                NavigationLink(destination: CommentListView(viewModel: CommentListViewModel(post: post, apiClient: apiClient))) {
+                    PostItemView(post: post)
+                }
             }
         }
         .navigationBarTitle("Posts")

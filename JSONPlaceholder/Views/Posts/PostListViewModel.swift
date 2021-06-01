@@ -23,7 +23,7 @@ class PostsListViewModel: ObservableObject {
     }
     
     func getPosts() {
-        self.cancellationToken = apiClient.getPostsTask(for: user)
+        self.cancellationToken = apiClient.getUserPostsTask(user)
             .sink(receiveCompletion: { complete in
                 
                 switch complete {

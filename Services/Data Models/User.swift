@@ -69,3 +69,9 @@ extension User: Codable {
         case company = "company"
     }
 }
+
+extension User: Identifiable {
+    public var id: UInt {
+        return self.identifier
+    }
+}

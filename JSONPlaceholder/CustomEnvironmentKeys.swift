@@ -17,7 +17,7 @@ struct ApiClientKey: EnvironmentKey {
 
 extension EnvironmentValues {
     var apiClient: JPAClientType {
-        get { return self[ApiClientKey] }
-        set { self[ApiClientKey] = newValue }
+        get { return self[ApiClientKey.self] }
+        set { self[ApiClientKey.self] = newValue }
     }
 }

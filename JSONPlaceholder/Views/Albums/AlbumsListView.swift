@@ -19,7 +19,7 @@ struct AlbumRowView: View {
 }
 
 struct AlbumsListView: View {
-    @ObservedObject var viewModel: AlbumsViewModel
+    @StateObject var viewModel: AlbumsViewModel
     
     var body: some View {
         List(viewModel.listOfAlbums, id: \.identifier) { album in

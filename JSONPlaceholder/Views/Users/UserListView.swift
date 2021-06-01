@@ -6,6 +6,7 @@
 //  Copyright © 2020 Bill Dunay. All rights reserved.
 //
 
+import Foundation
 import SwiftUI
 import JSONPlaceholderAPI
 
@@ -23,17 +24,13 @@ struct UserListRow: View {
 }
 
 struct UserListView: View {
-    @ObservedObject var viewModel: UserListViewModel
-    
-    @State var isInfoPresented: Bool = false // Creating a state
-    @State var isPostsPresented: Bool = false
-    
+    @StateObject var viewModel: UserListViewModel    
     @Binding var selectedUser: User?
     
     var body: some View {
         NavigationView {
             List {
-                ForEach(viewModel.listOfUsers, id: \.identifier) { user in
+                ForEach(viewModel.listOfUsers) { user in
                     Button(action: { self.selectedUser = user }) {
                         UserListRow(user: user)
                     }

@@ -26,12 +26,14 @@ public enum HTTPError: LocalizedError {
     }
 }
 
+// sourcery: AutoMockable
 public protocol JPAClientType {
     func getUsersTask() -> AnyPublisher<Array<User>, Error>
     func getAlbumsTask(for user: User) -> AnyPublisher<[Album], Error>
-    func getPostsTask(for user: User) -> AnyPublisher<Array<Post>, Error>
+    func getUserPostsTask(_ user: User) -> AnyPublisher<Array<Post>, Error>
     func getPostsTask(for postId: UInt) -> AnyPublisher<Array<Post>, Error>
     func getTodosTask(for user: User) -> AnyPublisher<Array<Todo>, Error>
+    func getComments(for postId: UInt) -> AnyPublisher<Array<Comment>, Error>
 }
 
 public class JPAClient {
@@ -40,13 +42,14 @@ public class JPAClient {
         case posts = "posts"
         case albums = "albums"
         case todos = "todos"
+        case comments = "comments"
     }
     
     public let apiClient = URLSession.shared
     // TODO: We want to return a value according to build enviroment var
-    public private(set) var environment: Environment
+    public private(set) var environment: BackendEnvironment
     
-    public init(environment: Environment = .production) {
+    public init(environment: BackendEnvironment = .production) {
         self.environment = environment
     }
 }
@@ -68,7 +71,7 @@ extension JPAClient: JPAClientType {
         return runTask_GetJSON(for: urlRequest)
     }
     
-    public func getPostsTask(for user: User) -> AnyPublisher<Array<Post>, Error> {
+    public func getUserPostsTask(_ user: User) -> AnyPublisher<Array<Post>, Error> {
         let requestURL = environment.url(endPoint: Endpoint.posts, queryParameters: [
             URLQueryItem(name: "userId", value: "\(user.identifier)")
         ])
@@ -89,6 +92,15 @@ extension JPAClient: JPAClientType {
     public func getTodosTask(for user: User) -> AnyPublisher<Array<Todo>, Error> {
         let requestURL = environment.url(endPoint: Endpoint.todos, queryParameters: [
             URLQueryItem(name: "userId", value: "\(user.identifier)")
+        ])
+        let urlRequest = URLRequest(url: requestURL)
+        
+        return runTask_GetJSON(for: urlRequest)
+    }
+    
+    public func getComments(for postId: UInt) -> AnyPublisher<Array<Comment>, Error> {
+        let requestURL = environment.url(endPoint: Endpoint.comments, queryParameters: [
+            URLQueryItem(name: "postId", value: "\(postId)")
         ])
         let urlRequest = URLRequest(url: requestURL)
         

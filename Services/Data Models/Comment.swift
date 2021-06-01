@@ -8,7 +8,15 @@
 
 import Foundation
 
-struct Comment: Codable, Hashable {
+public struct Comment: Hashable {
+    public let postId: UInt
+    public let identifier: UInt
+    public let name: String
+    public let email: String
+    public let body: String
+}
+
+extension Comment: Codable {
     enum CodingKeys: String, CodingKey {
         case postId = "postId"
         case identifier = "id"
@@ -16,10 +24,4 @@ struct Comment: Codable, Hashable {
         case email = "email"
         case body = "body"
     }
-    
-    let postId: UInt
-    let identifier: UInt
-    let name: String
-    let email: String
-    let body: String
 }

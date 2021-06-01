@@ -19,17 +19,16 @@ final class CurrentUser: ObservableObject {
 
 @main
 struct AppMain: App {
-    @AppStorage("currentUserId") var currentUserId: Int = -1
     @ObservedObject var currentUser = CurrentUser()
     
-    let apiClient: JPAClientType = JPAClient()
+    let apiClient: JPAClient = JPAClient(environment: .production)
     
     var body: some Scene {
         WindowGroup {
-            if let _ = currentUser.selectedUser {
+            if let selectedUser = currentUser.selectedUser {
                 TabView {
                     NavigationView {
-                        PostListView(viewModel: PostsListViewModel(with: currentUser.selectedUser!, apiClient: apiClient))
+                        PostListView(viewModel: PostsListViewModel(with: selectedUser, apiClient: apiClient))
                     }
                     .tabItem {
                         Image(systemName: "text.bubble.fill")
@@ -37,7 +36,7 @@ struct AppMain: App {
                     }
                     
                     NavigationView {
-                        AlbumsListView(viewModel: AlbumsViewModel(user: currentUser.selectedUser!, apiClient: apiClient))
+                        AlbumsListView(viewModel: AlbumsViewModel(user: selectedUser, apiClient: apiClient))
                     }
                     .tabItem {
                         Image(systemName: "rectangle.stack.fill")
@@ -45,7 +44,7 @@ struct AppMain: App {
                     }
                     
                     NavigationView {
-                        TodoListView(viewModel: TodoListViewModel(user: currentUser.selectedUser!, apiClient: apiClient))
+                        TodoListView(viewModel: TodoListViewModel(user: selectedUser, apiClient: apiClient))
                     }
                     .tabItem {
                         Image(systemName: "tray.full.fill")
@@ -54,10 +53,9 @@ struct AppMain: App {
                 }
                 .edgesIgnoringSafeArea(.top)
                 .environment(\.apiClient, apiClient)
-                .environmentObject(currentUser)
                 
             } else {
-                UserListView(viewModel: UserListViewModel(apiClient: AppServices.shared.apiClient), selectedUser: $currentUser.selectedUser)
+                UserListView(viewModel: UserListViewModel(apiClient: apiClient), selectedUser: $currentUser.selectedUser)
             }
         }
     }

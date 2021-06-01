@@ -8,7 +8,6 @@
 
 import SwiftUI
 import JSONPlaceholderAPI
-import Combine
 
 struct TodoItemView: View {
     let todo: Todo
@@ -28,7 +27,7 @@ struct TodoItemView: View {
 }
 
 struct TodoListView: View {
-    @ObservedObject var viewModel: TodoListViewModel
+    @StateObject var viewModel: TodoListViewModel
     
     var body: some View {
         List(viewModel.listOfTodos, id: \.identifier) { todo in
