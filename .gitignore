@@ -1,1 +1,3 @@
-!/JSONPlaceholder.xcodeproj/xcuserdata
+JSONPlaceholder.xcodeproj/xcuserdata/*
+JSONPlaceholder.xcworkspace/xcuserdata/*
+**/.DS_Store
