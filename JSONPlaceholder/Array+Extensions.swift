@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+//
 public extension Array {
     subscript(safe index: Int) -> Element? {
         return index >= startIndex && index < endIndex ? self[index] : nil
