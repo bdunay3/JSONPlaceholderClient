@@ -12,30 +12,24 @@ import JSONPlaceholderAPI
 
 final class CommentListViewModel: ObservableObject {
     @Published var commentList: [Comment] = []
+    @Published var showError = false
     
     let post: Post
-    let apiClient: JPAClientType
+    let apiClient: JPAClientAsyncType
     
-    private(set) var cancellationToken: AnyCancellable?
+    private(set) var currentError: Error?
     
-    init(post: Post, apiClient: JPAClientType) {
+    init(post: Post, apiClient: JPAClientAsyncType) {
         self.post = post
         self.apiClient = apiClient
     }
     
-    func getComments() {
-        print("getting comments...")
-        self.cancellationToken = apiClient.getComments(for: post.identifier)
-            .sink(receiveCompletion: { (result) in
-                switch result {
-                case .failure(let error):
-                    print(error.localizedDescription)
-                case .finished:
-                    break
-                }
-                
-            }, receiveValue: { [weak self](latestCommentList) in
-                self?.commentList = latestCommentList
-            })
+    func getComments() async {
+        do {
+            commentList = try await apiClient.getComments(for: post)
+        } catch let error {
+            showError = true
+            currentError = error
+        }
     }
 }

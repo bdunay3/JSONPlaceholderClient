@@ -20,4 +20,11 @@ public struct Post: Codable, Hashable {
     public let identifier: UInt
     public let title: String
     public let body: String
+    
+    init(userId: UInt, identifier: UInt, title: String, body: String) {
+        self.userId = userId
+        self.identifier = identifier
+        self.title = title
+        self.body = body
+    }
 }

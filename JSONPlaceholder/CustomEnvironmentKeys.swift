@@ -11,13 +11,25 @@ import SwiftUI
 import JSONPlaceholderAPI
 
 struct ApiClientKey: EnvironmentKey {
-    typealias Value = JPAClientType
-    static var defaultValue: JPAClientType = JPAClient()
+    typealias Value = JPAClientCombineType
+    static var defaultValue: JPAClientCombineType = JPAClient()
+}
+
+@available(iOS 15.0, *)
+struct AsyncApiClientKey: EnvironmentKey {
+    typealias Value = JPAClientAsyncType
+    static var defaultValue: JPAClientAsyncType = JPAClient()
 }
 
 extension EnvironmentValues {
-    var apiClient: JPAClientType {
+    var apiClient: JPAClientCombineType {
         get { return self[ApiClientKey.self] }
         set { self[ApiClientKey.self] = newValue }
+    }
+    
+    @available(iOS 15.0, *)
+    var asyncApiClient: JPAClientAsyncType {
+        get { return self[AsyncApiClientKey.self] }
+        set { self[AsyncApiClientKey.self] = newValue }
     }
 }

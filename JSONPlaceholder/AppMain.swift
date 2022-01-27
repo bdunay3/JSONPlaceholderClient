@@ -25,38 +25,46 @@ struct AppMain: App {
     
     var body: some Scene {
         WindowGroup {
-            if let selectedUser = currentUser.selectedUser {
-                TabView {
-                    NavigationView {
-                        PostListView(viewModel: PostsListViewModel(with: selectedUser, apiClient: apiClient))
-                    }
-                    .tabItem {
-                        Image(systemName: "text.bubble.fill")
-                        Text("Posts")
-                    }
-                    
-                    NavigationView {
-                        AlbumsListView(viewModel: AlbumsViewModel(user: selectedUser, apiClient: apiClient))
-                    }
-                    .tabItem {
-                        Image(systemName: "rectangle.stack.fill")
-                        Text("Albums")
-                    }
-                    
-                    NavigationView {
-                        TodoListView(viewModel: TodoListViewModel(user: selectedUser, apiClient: apiClient))
-                    }
-                    .tabItem {
-                        Image(systemName: "tray.full.fill")
-                        Text("Todo")
-                    }
-                }
-                .edgesIgnoringSafeArea(.top)
-                .environment(\.apiClient, apiClient)
-                
-            } else {
-                UserListView(viewModel: UserListViewModel(apiClient: apiClient), selectedUser: $currentUser.selectedUser)
-            }
+            EmptyView()
+//            if let selectedUser = currentUser.selectedUser {
+//                TabView {
+//                    NavigationView {
+//                        PostListView(viewModel: PostsListViewModel(with: selectedUser, apiClient: apiClient))
+//                    }
+//                    .navigationViewStyle(.stack)
+//                    .tabItem {
+//                        Image(systemName: "text.bubble.fill")
+//                        Text("Posts")
+//                    }
+//
+//                    NavigationView {
+//                        AlbumsListView(viewModel: AlbumsViewModel(user: selectedUser, apiClient: apiClient))
+//                    }
+//                    .navigationViewStyle(.stack)
+//                    .tabItem {
+//                        Image(systemName: "rectangle.stack.fill")
+//                        Text("Albums")
+//                    }
+//
+//                    NavigationView {
+//                        TodoListView(viewModel: TodoListViewModel(user: selectedUser, apiClient: apiClient))
+//                    }
+//                    .navigationViewStyle(.stack)
+//                    .tabItem {
+//                        Image(systemName: "tray.full.fill")
+//                        Text("Todo")
+//                    }
+//                }
+//                .edgesIgnoringSafeArea(.top)
+//                .environment(\.apiClient, apiClient)
+//                .environment(\.asyncApiClient, apiClient)
+//
+//            } else {
+//                NavigationView {
+//                    UserListContainerView(viewModel: UserListViewModel(apiClient: apiClient, currentUser: currentUser))
+//                }
+//                .navigationViewStyle(.stack)
+//            }
         }
     }
 }

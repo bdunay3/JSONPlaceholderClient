@@ -11,31 +11,26 @@ import JSONPlaceholderAPI
 import Combine
 
 class PostsListViewModel: ObservableObject {
-    let apiClient: JPAClientType
+    let apiClient: JPAClientAsyncType
     let user: User
     
     @Published var posts = [Post]()
-    private var cancellationToken: AnyCancellable?
+    @Published var showErrorMessage = false
     
-    init(with user: User, apiClient: JPAClientType) {
+    private(set) var currentError: Error?
+    
+    init(with user: User, apiClient: JPAClientAsyncType) {
         self.apiClient = apiClient
         self.user = user
     }
     
-    func getPosts() {
-        self.cancellationToken = apiClient.getUserPostsTask(user)
-            .sink(receiveCompletion: { complete in
-                
-                switch complete {
-                case .failure(let error):
-                    print(error)
-                default:
-                    break
-                }
-                
-            }, receiveValue: { fetchedPosts in
-                self.posts = fetchedPosts
-                self.cancellationToken = nil
-            })
+    @MainActor
+    func getPosts() async {
+        do {
+            posts = try await apiClient.getPosts(for: user)
+        } catch let error {
+            currentError = error
+            showErrorMessage = true
+        }
     }
 }

@@ -15,10 +15,10 @@ class TodoListViewModel: ObservableObject {
     @Published private(set) var error: (isShowing: Bool, message: String?) = (isShowing: false, message: nil)
     
     private let user: User
-    private let apiClient: JPAClientType
+    private let apiClient: JPAClientCombineType
     private var cancellationToken: AnyCancellable?
     
-    init(user: User, apiClient: JPAClientType) {
+    init(user: User, apiClient: JPAClientCombineType) {
         self.user = user
         self.apiClient = apiClient
     }

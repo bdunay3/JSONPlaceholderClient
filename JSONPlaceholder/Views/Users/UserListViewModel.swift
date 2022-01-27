@@ -9,44 +9,71 @@
 import Foundation
 import Combine
 import JSONPlaceholderAPI
+import SwiftUI
+import UIKit
 
-class UserListViewModel: ObservableObject {
-    @Published var listOfUsers: [User] = []
+class UserListViewModel {
+    @Published private(set) var viewState: ViewState = .inital
+    var currentUser: CurrentUser
     
-    let apiClient: JPAClientType
-    var cancellationToken: AnyCancellable?
+    private let apiClient: JPAClientCombineType
+    private var cancellables = [AnyCancellable]()
     
-    init(apiClient: JPAClientType) {
+    init(apiClient: JPAClientCombineType, currentUser: CurrentUser) {
         self.apiClient = apiClient
+        self.currentUser = currentUser
+    }
+}
+
+extension UserListViewModel: ElmObservable {
+    typealias Message = UserListAction
+    typealias State = ViewState
+    
+    enum ViewState {
+        case inital
+        case loading
+        case loaded([User], AlertableError?)
     }
     
-    func getUsers() {
-        self.cancellationToken = apiClient.getUsersTask()
-            .sink(receiveCompletion: { _ in
-                // TODO Send even to view showing an Alert with error information
-            }, receiveValue: { [weak self] (fetchedUsersList) in
-                self?.listOfUsers = fetchedUsersList
-                self?.cancellationToken = nil
-            })
+    enum UserListAction {
+        case load
+        case selected(User)
+        case delete(IndexSet, [User])
     }
     
-    func deleteUser(_ user: User) {
-        guard let index = listOfUsers.firstIndex(where: { $0.identifier == user.identifier }) else {
-            return
+    func send(_ message: Message) {
+        switch message {
+        case .load:
+            viewState = .loading
+            getUsers()
+            
+        case .delete(let indexes, let listOfUsers):
+            deleteUsers(at: indexes, from: listOfUsers)
+            
+        case .selected(let user):
+            currentUser.selectedUser = user
         }
-        
-        // TODO: Write API call to DELETE user from backend
-        listOfUsers.remove(at: index)
+    }
+}
+
+extension UserListViewModel {
+    func getUsers() {
+        apiClient.getUsersTask()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                guard case .failure(let error) = completion else { return }
+                self?.viewState = .loaded([], AlertableError(error: error, actions: [
+                    .init(title: "Cancel", action: { }),
+                    .init(title: "Retry", action: { self?.send(.load) })
+                ]))
+                
+            } receiveValue: { [weak self] listOfUsers in
+                self?.viewState = .loaded(listOfUsers, nil)
+            }
+            .store(in: &cancellables)
     }
     
-    func postsViewModel(for user: User) -> PostsListViewModel {
-        let viewModel = PostsListViewModel(with: user, apiClient: apiClient)
+    func deleteUsers(at: IndexSet, from listOfUsers: [User]) {
         
-        return viewModel
-    }
-    
-    func albumsViewModel(for user: User) -> AlbumsViewModel {
-        let viewModel = AlbumsViewModel(user: user, apiClient: apiClient)
-        return viewModel
     }
 }

@@ -16,6 +16,12 @@ public struct Company: Hashable, CustomStringConvertible {
     public var description: String {
         return "\(name)"
     }
+    
+    public init(name: String, catchPhrase: String, bs: String) {
+        self.name = name
+        self.catchPhrase = catchPhrase
+        self.bs = bs
+    }
 }
 
 extension Company: Codable {}
@@ -28,6 +34,10 @@ public struct GeoLocation: Hashable, CustomStringConvertible {
         return "\(lat), \(lng)"
     }
     
+    public init(lat: String, lng: String) {
+        self.lat = lat
+        self.lng = lng
+    }
 }
 
 extension GeoLocation: Codable {}
@@ -42,6 +52,14 @@ public struct Address: Hashable, CustomStringConvertible {
     public var description: String {
         return "\(street), \(city)"
     }
+    
+    public init(street: String, suite: String, city: String, zipcode: String, geo: GeoLocation) {
+        self.street = street
+        self.suite = suite
+        self.city = city
+        self.zipcode = zipcode
+        self.geo = geo
+    }
 }
 
 extension Address: Codable {}
@@ -55,6 +73,24 @@ public struct User: Hashable {
     public let phone: String
     public let website: String
     public let company: Company
+    
+    public init(identifier: UInt,
+                name: String,
+                username: String,
+                email: String,
+                address: Address,
+                phone: String,
+                website: String,
+                company: Company) {
+        self.identifier = identifier
+        self.name = name
+        self.username = username
+        self.email = email
+        self.address = address
+        self.phone = phone
+        self.website = website
+        self.company = company
+    }
 }
 
 extension User: Codable {

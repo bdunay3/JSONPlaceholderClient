@@ -26,17 +26,23 @@ struct CommentListItem: View {
 
 struct CommentListView: View {
     @StateObject var viewModel: CommentListViewModel
-    @Environment(\.apiClient) var apiClient
     
     var body: some View {
-        List {
-            ForEach(viewModel.commentList, id: \.identifier) { comment in
-                CommentListItem(comment: comment)
+        VStack {
+            if viewModel.commentList.isEmpty {
+                ProgressView()
+                    .progressViewStyle(.circular)
+            } else {
+                List {
+                    ForEach(viewModel.commentList, id: \.identifier) { comment in
+                        CommentListItem(comment: comment)
+                    }
+                }
             }
         }
         .navigationBarTitle("Comments")
-        .onAppear {
-            self.viewModel.getComments()
+        .task {
+            await self.viewModel.getComments()
         }
     }
 }
