@@ -6,65 +6,72 @@
 //  Copyright © 2020 Bill Dunay. All rights reserved.
 //
 
+import Models
+import RESTClient
 import SwiftUI
-import JSONPlaceholderAPI
-
-final class CurrentUser: ObservableObject {
-    @Published var selectedUser: User?
-    
-    init(user: User? = nil) {
-        self.selectedUser = user
-    }
-}
+import Workflows
+import UI
 
 @main
 struct AppMain: App {
-    @ObservedObject var currentUser = CurrentUser()
-    
-    let apiClient: JPAClient = JPAClient(environment: .production)
+    @StateObject var dependencies = Dependencies(environment: .production)
+    @StateObject var appWorkflow = AppWorkflow()
     
     var body: some Scene {
         WindowGroup {
-            EmptyView()
-//            if let selectedUser = currentUser.selectedUser {
-//                TabView {
-//                    NavigationView {
-//                        PostListView(viewModel: PostsListViewModel(with: selectedUser, apiClient: apiClient))
-//                    }
-//                    .navigationViewStyle(.stack)
-//                    .tabItem {
-//                        Image(systemName: "text.bubble.fill")
-//                        Text("Posts")
-//                    }
-//
-//                    NavigationView {
-//                        AlbumsListView(viewModel: AlbumsViewModel(user: selectedUser, apiClient: apiClient))
-//                    }
-//                    .navigationViewStyle(.stack)
-//                    .tabItem {
-//                        Image(systemName: "rectangle.stack.fill")
-//                        Text("Albums")
-//                    }
-//
-//                    NavigationView {
-//                        TodoListView(viewModel: TodoListViewModel(user: selectedUser, apiClient: apiClient))
-//                    }
-//                    .navigationViewStyle(.stack)
-//                    .tabItem {
-//                        Image(systemName: "tray.full.fill")
-//                        Text("Todo")
-//                    }
-//                }
-//                .edgesIgnoringSafeArea(.top)
-//                .environment(\.apiClient, apiClient)
-//                .environment(\.asyncApiClient, apiClient)
-//
-//            } else {
-//                NavigationView {
-//                    UserListContainerView(viewModel: UserListViewModel(apiClient: apiClient, currentUser: currentUser))
-//                }
-//                .navigationViewStyle(.stack)
-//            }
+            switch appWorkflow.viewState {
+                case .showUserList:
+                    userListView()
+                    
+                case .showUser(let user):
+                    loggedInUserTabView(for: user)
+            }
         }
+    }
+    
+    @ViewBuilder
+    func userListView() -> some View {
+        NavigationView {
+            UserListContainerView(workflow: UserListWorkflow(dependencies: .init(combineClient: dependencies.restClient) {
+                self.appWorkflow.send(.selectedUser($0))
+            }))
+        }
+        .navigationViewStyle(.stack)
+    }
+    
+    func loggedInUserTabView(for selectedUser: User) -> some View {
+        TabView {
+            NavigationView {
+                PostListView(
+                    workflow: PostsListWorkflow(with: selectedUser, dependencies: .init(asyncClient: dependencies.restClient))
+                )
+            }
+            .navigationViewStyle(.stack)
+            .tabItem {
+                Image(systemName: "text.bubble.fill")
+                Text("Posts")
+            }
+            
+            NavigationView {
+                AlbumsListView(
+                    workflow: AlbumsWorkflow(user: selectedUser, dependencies: .init(combineClient: dependencies.restClient))
+                )
+            }
+            .navigationViewStyle(.stack)
+            .tabItem {
+                Image(systemName: "rectangle.stack.fill")
+                Text("Albums")
+            }
+            
+            NavigationView {
+                TodoListView(workflow: TodoListWorkflow(user: selectedUser, dependencies: .init(combineClient: dependencies.restClient)))
+            }
+            .navigationViewStyle(.stack)
+            .tabItem {
+                Image(systemName: "tray.full.fill")
+                Text("Todo")
+            }
+        }
+        .edgesIgnoringSafeArea(.top)
     }
 }
