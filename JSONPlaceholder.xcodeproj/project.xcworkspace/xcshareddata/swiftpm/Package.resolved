@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "VSM",
+        "repositoryURL": "https://github.csnzoo.com/shared/vsm-ios",
+        "state": {
+          "branch": "main",
+          "revision": "fdc5329204d55188a9404ee73e9db015874f2499",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}

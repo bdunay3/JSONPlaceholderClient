@@ -6,65 +6,91 @@
 //  Copyright © 2020 Bill Dunay. All rights reserved.
 //
 
+import Dependencies
+import Models
+import RESTClient
 import SwiftUI
-import JSONPlaceholderAPI
-
-final class CurrentUser: ObservableObject {
-    @Published var selectedUser: User?
-    
-    init(user: User? = nil) {
-        self.selectedUser = user
-    }
-}
+import UI
+import VSM
 
 @main
 struct AppMain: App {
-    @ObservedObject var currentUser = CurrentUser()
-    
-    let apiClient: JPAClient = JPAClient(environment: .production)
-    
-    var body: some Scene {
+    @SceneBuilder var body: some Scene {
         WindowGroup {
-            EmptyView()
-//            if let selectedUser = currentUser.selectedUser {
-//                TabView {
-//                    NavigationView {
-//                        PostListView(viewModel: PostsListViewModel(with: selectedUser, apiClient: apiClient))
-//                    }
-//                    .navigationViewStyle(.stack)
-//                    .tabItem {
-//                        Image(systemName: "text.bubble.fill")
-//                        Text("Posts")
-//                    }
-//
-//                    NavigationView {
-//                        AlbumsListView(viewModel: AlbumsViewModel(user: selectedUser, apiClient: apiClient))
-//                    }
-//                    .navigationViewStyle(.stack)
-//                    .tabItem {
-//                        Image(systemName: "rectangle.stack.fill")
-//                        Text("Albums")
-//                    }
-//
-//                    NavigationView {
-//                        TodoListView(viewModel: TodoListViewModel(user: selectedUser, apiClient: apiClient))
-//                    }
-//                    .navigationViewStyle(.stack)
-//                    .tabItem {
-//                        Image(systemName: "tray.full.fill")
-//                        Text("Todo")
-//                    }
-//                }
-//                .edgesIgnoringSafeArea(.top)
-//                .environment(\.apiClient, apiClient)
-//                .environment(\.asyncApiClient, apiClient)
-//
-//            } else {
-//                NavigationView {
-//                    UserListContainerView(viewModel: UserListViewModel(apiClient: apiClient, currentUser: currentUser))
-//                }
-//                .navigationViewStyle(.stack)
-//            }
+            LoginManagementView(state: .login(UserLoginModel(dependencies: Dependencies(environment: .production))))
+        }
+    }
+}
+
+struct LoginManagementView: View {
+    @ObservedObject var stateContainer: StateContainer<AppViewState>
+    
+    var body: some View {
+        Group {
+            switch stateContainer.state {
+            case .login(let loginViewModel):
+                showUserListView(model: loginViewModel)
+                
+            case .showUser(let loggedInUserModel):
+                showLoggedInUserViews(model: loggedInUserModel)
+            }
+        }
+    }
+    
+    init(state: AppViewState) {
+        self.stateContainer = .init(state: state)
+    }
+    
+    func showUserListView(model: UserLoginModeling) -> some View {
+        NavigationView {
+            UserListContainerView(dependencies: .init(combineClient: model.dependencies.restClient, onSelect: {
+                self.stateContainer.observe(model.selected(user: $0))
+            }))
+        }
+        .navigationViewStyle(.stack)
+    }
+    
+    func showLoggedInUserViews(model: UserLoggedInModeling) -> some View {
+        TabView {
+            tabItem(title: "Posts", icon: "text.bubble.fill") {
+                PostListView(user: model.loggedInUser, dependencies: model.dependencies)
+                    .applyLogout(from: model, using: self.stateContainer)
+            }
+            
+            tabItem(title: "Albums", icon: "rectangle.stack.fill") {
+                AlbumsListView(user: model.loggedInUser, dependencies: model.dependencies)
+                    .applyLogout(from: model, using: self.stateContainer)
+            }
+            
+            tabItem(title: "Todo", icon: "tray.full.fill") {
+                TodoListView(user: model.loggedInUser, dependencies: model.dependencies)
+                    .applyLogout(from: model, using: self.stateContainer)
+            }
+        }
+        .edgesIgnoringSafeArea(.top)
+    }
+    
+    func tabItem<Content: View>(title: String, icon: String, presenting tabContents: () -> Content) -> some View {
+        NavigationView {
+            tabContents()
+        }
+        .navigationViewStyle(.stack)
+        .tabItem {
+            Label(title, systemImage: icon)
+        }
+    }
+}
+
+private extension View {
+    func applyLogout(from model: UserLoggedInModeling, using stateContainer: StateContainer<AppViewState>) -> some View {
+        self.toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: {
+                    stateContainer.observe(model.logout())
+                }) {
+                    Image(systemName: "arrow.backward.square")
+                }
+            }
         }
     }
 }
